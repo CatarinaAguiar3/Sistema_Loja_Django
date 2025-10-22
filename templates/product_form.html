@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} Formulário do Produto {% endblock %}
+{% block content %}
+<h1>{% if form.instance.pk %}Editar Produto{% else %}Adicionar Novo Produto{% endif %}  </h1>
+
+<!-- Formulário com método "POST" (postar algo pela primeira vez)-->
+<form method="post" novalidate> <!-- novalidate = não valide o formulário, pois ele será validado no Backend-->
+    {% csrf_token %} {{form.as_p}} <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'product_list' %}" class="btn btn-secondary">Cancelar</a> 
+</form>
+{% endblock %}
