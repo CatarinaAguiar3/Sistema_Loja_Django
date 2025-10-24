@@ -81,7 +81,7 @@ DATABASES = {
         "NAME": "shop", # nome do banco que eu criei
         "USER": "root", # nome do usuário no MySQL
         "PASSWORD":"1234", # senha do MySQL
-        "HOST": "localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
+        "HOST": "127.0.0.1", #"localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
         "PORT": "3306", # Porta do MySQL  
     }
 }
