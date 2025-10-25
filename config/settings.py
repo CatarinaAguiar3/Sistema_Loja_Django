@@ -79,9 +79,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql", # Motor de conexão (definir qual tipo de banco de dados)
         "NAME": "shop", # nome do banco que eu criei
-        "USER": "django_user", # nome do usuário no MySQL
+        "USER": "root", # nome do usuário no MySQL
         "PASSWORD":"1234", # senha do MySQL
-        "HOST": "localhost", #"127.0.0.1", #"localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
+        "HOST": "127.0.0.1", #"localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
         "PORT": "3306", # Porta do MySQL  
     }
 }
