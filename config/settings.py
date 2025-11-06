@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-1vf!$i5)(5t+%+435iqo$nr31)gv1lm--gxm#ys$1#4ca_4bv$"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','localhost','127.0.0.1','0.0.0.0','13.222.222.202','184.72.206.29']
+#ALLOWED_HOSTS = ['*','localhost','127.0.0.1','0.0.0.0','13.222.222.202','184.72.206.29']
 
+ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
 
 # Application definition
 # Aplicações que serão monitoradas
@@ -78,11 +83,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql", # Motor de conexão (definir qual tipo de banco de dados)
-        "NAME": "shop", # nome do banco que eu criei
-        "USER": "django_user", # nome do usuário no MySQL
-        "PASSWORD":"1234", # senha do MySQL
-        "HOST": "localhost", #"127.0.0.1", #"localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
-        "PORT": "3306", # Porta do MySQL  
+        "NAME": config('DB_NAME'), # nome do banco que eu criei
+        "USER": config('DB_USER'), # nome do usuário no MySQL
+        "PASSWORD": config('DB_PASSWORD'), # senha do MySQL
+        "HOST": config('DB_HOST'), #"127.0.0.1", #"localhost", # Caminho do banco de dados. Se, localhost: banco está locamente. Ou, '127.0.0.1': o banco está em uma nuvem.
+        "PORT": config('DB_PORT'), # Porta do MySQL  
     }
 }
 
@@ -130,3 +135,38 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Configurações do AWS S3
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME")
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400", # Permitir cache por 1 dia
+}
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+# Configuração de arquivos estáticos e mídia
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3StaticStorage"
+
+# URLs para arquivos de mídia
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+
+# # Configurações locais para desenvolvimento
+# if DEBUG:
+#     MEDIA_ROOT = BASE_DIR / "media"
+#     STATIC_ROOT = BASE_DIR / "staticfiles
