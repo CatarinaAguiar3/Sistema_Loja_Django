@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Produto
 from .forms import ProductForm 
 
@@ -10,44 +11,49 @@ def product_list(request):
     #Renderiza o template, passando os produtos como contexto
     return render(request, "product_list.html", {"produtos":produtos})
 
-# View para criar um produto
+# view para criar um produto
 def product_create(request):
     if request.method == "POST":
-        # Se o método for POST, o formulário será enviado
-        form = ProductForm(request.POST) # formulário para requisição de "POST"
-        if form.is_valid(): # Se o formulário for válido
-            form.save() # Salvar o novo produto no banco de dados
-            return redirect("product_list") #Redirecionar para a lista de produtos (tela inicial)
+        # Se o método for POST, o formulário foi enviado
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()  # Salva o novo produto no banco de dados
+            messages.success(request, "Produto criado com sucesso!")
+            return redirect("product_list")  # Redireciona para a lista de produtos
     else:
-        # Se o método for GET, será exibido um formulário em branco
+        # Se o método for GET, exibe um formulário em branco
         form = ProductForm()
-    # Renderizar o template do formulário, passando o "form" como contexto
-    return render(request, "product_form.html", {"form":form})    
 
-# View para atualizar um produto
+    # Renderiza o template do formulário, passando o form como contexto
+    return render(request, "product_form.html", {"form": form})
+
+# view para atualizar um produto
 def product_update(request, pk):
-    # Busca o produto pela chave primária (pk) ou retorna um erro 404 se não enco
-    produto = get_object_or_404(Produto, pk=pk)
+    # Busca o produto pela chave primária (pk) ou retorna um erro 404 se não encontrar
+    produto = get_object_or_404(Produto, pk=pk)   
 
-    # Será passado 'instance=produto' para que o formulário saiba que estamos edi 
-    form = ProductForm(request.POST, instance=produto)
-    if form.is_valid():
-        form.save()
-        return redirect("product_list") # Retorna para a página inicial
+    if request.method == "POST":
+        # Passamos 'instance=produto' para que o formulário saiba que estamos editando um objeto existente
+        form = ProductForm(request.POST, request.FILES, instance=produto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Produto atualizado com sucesso!")
+            return redirect("product_list")
     else:
         # Ao carregar a página (GET), o formulário é preenchido com os dados do produto
         form = ProductForm(instance=produto)
 
-    # Reutilizar o mesmo template do formulário de criação
-    return render(request, "product_form.html", {"form":form}) 
+    # Reutiliza o mesmo template do formulário de criação
+    return render(request, "product_form.html", {"form": form, "produto": produto})
 
-# View para deletar um produto
+# view para deletar um produto
 def product_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
 
     if request.method == "POST":
         # Se o formulário de confirmação for enviado (POST), deleta o objeto
-        produto.delete() # Equivale ao "DROP" do SQL
+        produto.delete()
         return redirect("product_list")
+
     # Se for um acesso via GET, exibe a página de confirmação
     return render(request, "product_confirm_delete.html", {"produto": produto})
