@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from .forms import ProductForm
 from .models import Produto
-from .forms import ProductForm 
 
 # Create your views here.
-# View da tela inicial (listar todos os produtos)
+
+# view da tela inicial, listar todos os produtos
 def product_list(request):
-    # Busca todos os objetos (Produtos) no banco de dados
+    # Busca todos os objetos Produto no banco de dados
     produtos = Produto.objects.all()
-    #Renderiza o template, passando os produtos como contexto
-    return render(request, "product_list.html", {"produtos":produtos})
+    # Renderiza o template, passando os produtos como contexto
+    return render(request, "product_list.html", {"produtos": produtos})
 
 # view para criar um produto
 def product_create(request):

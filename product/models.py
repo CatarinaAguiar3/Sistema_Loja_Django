@@ -1,6 +1,19 @@
 from django.db import models
+import uuid
+import os
+from hashlib import md5
 
 # Create your models here.
+def gerar_nome_unico_imagem(instance, filename):
+    """Gera um nome único para a imagem usando UUID e hash MD5"""
+    # Obtém a extensão do arquivo original
+    ext = filename.split(".")[-1]
+    # Gera um UUID único
+    uuid_id = str(uuid.uuid4())
+    # Cria um hash MD5 do nome original + UUID para evitar colisões
+    hash_nome = md5(f"{filename}{uuid_id}".encode()).hexdigest()
+    # Retorna o caminho completo com o novo nome
+    return os.path.join("imagens-produtos", f"{hash_nome}.{ext}")
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
     descricao = models.TextField()
