@@ -1,3 +1,14 @@
+<!-- {% extends 'base.html' %}
+{% block title %}Formulário do Produto{% endblock %}
+{% block content %}
+<h1>{% if form.instance.pk %}Editar Produto{% else %}Adicionar Novo Produto{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %} {{ form.as_p }} <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'product_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %} -->
+
 {% extends 'base.html' %}
 {% block title %}Formulário do Produto{% endblock %}
 {% block content %}
