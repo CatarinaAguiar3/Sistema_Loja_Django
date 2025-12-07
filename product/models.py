@@ -47,7 +47,7 @@ def gerar_nome_unico_imagem(instance, filename):
     # Cria um hash MD5 do nome original + UUID para evitar colisões
     hash_nome = md5(f"{filename}{uuid_id}".encode()).hexdigest()
     # Retorna o caminho completo com o novo nome
-    return os.path.join("imagens-produtos", f"{hash_nome}.{ext}")
+    return os.path.join("produtos", f"{hash_nome}.{ext}")
 
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
